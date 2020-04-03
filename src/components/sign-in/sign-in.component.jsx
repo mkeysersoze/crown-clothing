@@ -3,6 +3,7 @@ import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 
 import './sign-in.styles.scss'
+import { signInWithGoogle } from '../../firebase/firebase.utils';
 
 class SignIn extends Component {
 
@@ -10,7 +11,8 @@ class SignIn extends Component {
         super()
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            currentUser: null
         }
     }
 
@@ -26,7 +28,6 @@ class SignIn extends Component {
 
         this.setState({ [name]: value })
     }
-
 
     render() {
         return (
@@ -49,7 +50,11 @@ class SignIn extends Component {
                         value={this.state.password}
                         required
                         handleChange={this.handleChange} />
-                    <CustomButton type='submit'>Sign In</CustomButton>
+
+                    <div className='buttons'>
+                        <CustomButton type='submit'>Sign In</CustomButton>
+                        <CustomButton onClick={signInWithGoogle} isGoogleSignIn>Sign In with Google</CustomButton>
+                    </div>
                 </form>
             </div>
         )
