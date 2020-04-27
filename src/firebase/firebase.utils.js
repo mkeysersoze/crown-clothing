@@ -15,6 +15,10 @@ const firebaseConfig = {
     measurementId: "G-7RE9S1LD8N"
 }
 
+firebase.initializeApp(firebaseConfig)
+export const auth = firebase.auth()
+export const store = firebase.firestore()
+
 export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!userAuth) return;
 
@@ -40,10 +44,16 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef
 }
 
-firebase.initializeApp(firebaseConfig)
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = store.collection(collectionKey)
+    const batch = store.batch()
 
-export const auth = firebase.auth()
-export const store = firebase.firestore()
+    objectsToAdd.forEach(object => {
+        const newDocRef = collectionRef.doc()
+        batch.set(newDocRef, object)
+    })
+    return await batch.commit()
+}
 
 const provider = new firebase.auth.GoogleAuthProvider()
 provider.setCustomParameters({ prompt: 'select_account' })
